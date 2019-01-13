@@ -18,6 +18,7 @@ class ProjectController extends CI_Controller
 	{
 
 		$this->load->helper('form');
+		$this->load->library('session');
 
 		$data['projects'] = $this->Project->getAll();
 
@@ -30,11 +31,39 @@ class ProjectController extends CI_Controller
 	public function show ( $id ) 
 	{
 		$this->load->helper('form');
+		$this->load->library('session');
+
+		$data['nameInputAttributes'] = [
+
+        'name' => 'orderName',
+        'placeholder' => 'Unesite ime naloga',
+        'class' => 'form-control',
+        //'value' => set_value( 'name', $this->session->userdata( 'name' ) ) 
+
+      	];
+
+      $data['descriptionInputAttributes'] = [
+
+        'name' => 'orderDescription',
+        'placeholder' => 'Unesite opis naloga',
+        'class' => 'form-control',
+        //'value' => set_value( 'description', $this->session->userdata( 'description' ) )
+
+      ];
+
+      $data['submitAttributes'] = [
+
+        'name' => 'submit',
+        'value' => 'Stvori nalog',
+        'class' => 'btn btn-primary'
+
+      ];
 
 		$data['project'] = $this->Project->get( $id );
 
 		$this->load->view('layouts/partials/header');
 		$this->load->view('showProject', $data);
+		$this->load->view('layouts/partials/create-order-modal', $data);
 		$this->load->view('layouts/partials/footer');
 	
 	}
@@ -42,14 +71,15 @@ class ProjectController extends CI_Controller
 	public function create () 
 	{
 
-	  $this->load->helper('form');			
+	  $this->load->helper('form');
+	  $this->load->library('session');		
 
 	  $data['nameInputAttributes'] = [
 
         'name' => 'name',
         'placeholder' => 'Unesite ime projekta',
         'class' => 'form-control',
-        'value' => set_value('name')
+        'value' => set_value( 'name', $this->session->userdata( 'name' ) ) 
 
       	];
 
@@ -58,7 +88,7 @@ class ProjectController extends CI_Controller
         'name' => 'description',
         'placeholder' => 'Unesite opis projekta',
         'class' => 'form-control',
-        'value' => set_value('description')
+        'value' => set_value( 'description', $this->session->userdata( 'description' ) )
 
       ];
 
@@ -90,10 +120,15 @@ class ProjectController extends CI_Controller
 		$this->form_validation->set_rules( 'start_date', 'Početni datum', 'required' );
 		$this->form_validation->set_rules( 'end_date', 'Kraj projekta', 'required' );
 
+		$inputProjectName = $this->input->post('name');
+		$this->form_validation->set_message('is_unique', "Naziv: $inputProjectName je zauzet!");
+
 		if($this->form_validation->run() == TRUE) 
 		{
 
 			$this->Project->create();
+
+			$this->session->set_flashdata( 'success', 'Uspješno ste kreirali zadatak!' );
 
 			redirect( base_url() );
 			
@@ -108,25 +143,60 @@ class ProjectController extends CI_Controller
 	  					</button>
   					</div>' 
 			));
+
+			$this->session->set_flashdata([
+
+				'name' => $this->input->post('name'),
+				'description' => $this->input->post('description'),
+				'start_date' => $this->input->post('start_date'),
+				'end_date' => $this->input->post('end_date'),
+
+			]);
+
+			//$data['form_data'] = $this->input->post();
+			//$this->load->view( 'layouts/partials/header' );
+			//$this->load->view( 'create', $data );
+			//$this->load->view( 'layouts/partials/footer' ); 
 		
 			redirect( $_SERVER['HTTP_REFERER'] );
 
 		}
 	
-		$data['form_data'] = $this->input->post();
-		$this->load->view( 'layouts/partials/header' );
-		$this->load->view( 'create', $data );
-		$this->load->view( 'layouts/partials/footer' );
-	
 	}
 
 	public function edit ( $id ) 
 	{
+
+	  $project = $this->Project->get( $id );
+	  
+	  $data['project'] = $project;		
+
+	  $data['nameInputAttributes'] = [
+
+        'name' => 'name',
+        'class' => 'form-control',
+        'value' => $project->name
+
+      ];
+
+      $data['descriptionInputAttributes'] = [
+
+        'name' => 'description',
+        'value' => $project->description,
+        'class' => 'form-control'
+
+      ];
+
+      $data['submitAttributes'] = [
+
+        'name' => 'submit',
+        'value' => 'Uredi projekt',
+        'class' => 'btn btn-primary'
+
+      ];
 		
 		$this->load->helper('form');
 		$this->load->library('session');
-
-		$data['project'] = $this->Project->get( $id );
 	
 		$this->load->view( 'layouts/partials/header' );
 		$this->load->view( 'edit', $data );
@@ -140,15 +210,20 @@ class ProjectController extends CI_Controller
 		$this->load->library('form_validation');
 		$this->load->library('session');
 
-		$this->form_validation->set_rules( 'name', 'Ime projekta', 'required');
+		$this->form_validation->set_rules( 'name', 'Ime projekta', "required|callback_uniqueName[$id]");
 		$this->form_validation->set_rules( 'description', 'Opis projekta', 'required' );
 		$this->form_validation->set_rules( 'start_date', 'Početni datum', 'required' );
 		$this->form_validation->set_rules( 'end_date', 'Kraj projekta', 'required' );
 
+		$inputProjectName = $this->input->post('name');
+		$this->form_validation->set_message('uniqueName', "Naziv: $inputProjectName je zauzet!");
+
 		if($this->form_validation->run() == TRUE) 
 		{
 
-		$this->Project->edit( $id );
+			$this->Project->edit( $id );
+
+			$this->session->set_flashdata( 'success', 'Uspješno ste uredili zadatak!' );
 
 			redirect( base_url() );
 			
@@ -185,5 +260,21 @@ class ProjectController extends CI_Controller
 		redirect(base_url());
 	
 	}
+
+	public function uniqueName ( $val, $id ) 
+	
+	{
+		
+		if ( $this->Project->unique( 'name', $val, $id ) )
+		{
+
+			return true;
+
+		}
+
+		return false;
+	
+	}
+	
 
 }

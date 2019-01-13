@@ -9,7 +9,7 @@
       </a>
     </div>
      
-    <?php echo validation_errors(); ?>
+    <?php echo validation_errors();?>
     <?php if ( $this->session->flashdata('errors') ): ?>
 
       <?php echo $this->session->flashdata('errors') ?>
@@ -38,7 +38,8 @@
 
         <?php echo form_label('Pocetak projekta'); ?>
 
-        <input type="datetime-local" name="start_date" step="1">
+        <input type="datetime-local" name="start_date" step="1" 
+        value="<?php echo $this->session->flashdata('start_date') ? set_value('start_date', strftime('%Y-%m-%dT%H:%M:%S', strtotime($this->session->flashdata('start_date')))) : '' ?>">
 
       </div>
 
@@ -46,7 +47,8 @@
 
         <?php echo form_label('Kraj projekta'); ?>
 
-        <input type="datetime-local" name="end_date" step="1">
+        <input type="datetime-local" name="end_date" step="1" 
+        value="<?php echo $this->session->flashdata('end_date') ? set_value('start_date', strftime('%Y-%m-%dT%H:%M:%S', strtotime($this->session->flashdata('end_date')))) : '' ?>">
 
       </div>
 

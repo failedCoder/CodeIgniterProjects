@@ -18,21 +18,21 @@
 			    <h6 class="card-title">Kraj projekta:</h6>
 			    <p class="card-text"><?php echo $project->end_date ?></p>
 			    <div class="btn-group" role="group" aria-label="Basic example">
-				  <a class="btn btn-outline-warning mr-2" href="<?php base_url() ?> projects/<?=$project->id?>/edit" role="button"> 
-			    	<i class="fas fa-edit"></i> 
+				  <a class="btn btn-outline-warning mr-2" href='<?php echo base_url("/projects/$project->id/edit") ?>' role="button"> 
+			    	<i class="fas fa-edit"></i>
 			   	  </a>
-
-				  <?php
-				   echo form_open( base_url("/projects/$project->id") );
-				   
-				   echo form_submit('submit', 'Obriši post', ['class' => 'btn btn-outline-warning ml-2']);
-				  ?>
-
+			   	<?php echo form_open( base_url( "/projects/$project->id" ) ) ?>  
+			   		
 			      	<button type="submit" class="btn btn-outline-danger ml-2"> <i class="fas fa-trash-alt"></i> </button>
 
 			    <?php echo form_close(); ?>
 				</div>
-			    
+				<h5 class="card-title my-3">Nalozi:</h5>
+
+				<!-- Modal button -->
+			    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#createOrderModal">
+				  Novi nalog
+				</button>
 			    
 			  </div>
 			  <div class="card-footer text-muted">

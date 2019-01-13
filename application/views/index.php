@@ -4,6 +4,13 @@
 
 	<a href="<?php base_url() ?>projects/create" class="btn btn-success my-1">Dodaj novi projekt</a>
 
+	<?php if ($this->session->flashdata('success')): ?>
+		<div class="alert alert-success alert-dismissible text-center">
+		  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		  <?php echo $this->session->flashdata('success') ?>
+		</div>
+	<?php endif; ?>	
+
 	<?php if( $projects ): ?>
 
 	<table class="table table-striped table-hover">

@@ -59,4 +59,25 @@ class Project extends CI_Model
 	
 	}
 
+	public function unique ( $column, $value, $id ) 
+	{
+		
+		$this->db->where( "id !=", $id );
+
+		$this->db->where( $column, $value );
+
+		$query = $this->db->get('projects');
+
+		if ( $query->result() )
+		{
+
+			return false;
+
+		}
+
+		return true;
+	
+	}
+	
+
 }
