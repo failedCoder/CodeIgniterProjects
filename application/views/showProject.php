@@ -30,7 +30,7 @@
 				<h5 class="card-title my-3">Nalozi:</h5>
 
 				<!-- Modal button -->
-			    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#createOrderModal">
+			    <button type="button" class="btn btn-outline-primary" data-toggle="modal" id="orderModalBtn" data-target="#createOrderModal" data-project-id="<?php echo $project->id ?>">
 				  Novi nalog
 				</button>
 			    

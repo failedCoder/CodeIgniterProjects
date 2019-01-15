@@ -16,13 +16,13 @@
 
     <?php endif; ?>
 
-    <?php echo form_open( base_url() . 'projects' ); ?>
+    <?php echo form_open( base_url() . 'projects/create' ); ?>
 
       <div class="form-group">
 
         <?php echo form_label('Ime projekta'); ?>
 
-        <?php echo form_input($nameInputAttributes); ?>
+        <?php echo form_input($nameInputAttributes, set_value('name')); ?>
 
       </div>
 

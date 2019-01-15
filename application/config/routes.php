@@ -59,3 +59,6 @@ $route['projects/(:num)/edit'] = 'ProjectController/edit/$1';
 $route['projects/update/(:num)']['post'] = 'ProjectController/update/$1';
 $route['projects/(:num)']['post'] = "ProjectController/destroy/$1";
 $route['projects/(:num)/show'] = 'ProjectController/show/$1';
+
+//??
+$route['orders']['post'] = 'OrderController/store';
