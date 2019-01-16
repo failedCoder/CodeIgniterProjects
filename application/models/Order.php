@@ -23,30 +23,43 @@ class Order extends CI_Model
 
 	public function validateOrderType ( $projectId, $typeId ) 
 	{
-		
+	
 		$this->db->where( 'project_id', $projectId );
 
 		$this->db->where( 'type_id', $typeId );
 
-		$resultCount = $this->db->count_all_results('projects');
+		$resultCount = $this->db->count_all_results( 'orders' );
+	
 
-		//$i = $this->db->count()
-		//dodaj petlju
-		switch ( $resultCount ) {
-			case 1:
-				# code...
-				break;
-			case 2:
-				# code...
-				break;
-			case 3:
-				# code...
-				break;
-			
-			default:
-				# code...
-				break;
+		define( 'ORDER_LIMIT', 5);
+
+		if ( $resultCount > ORDER_LIMIT ) {
+
+			return false;
+
 		}
+
+
+		define( 'NUMBER_OF_ORDER_TYPES' , 3);
+
+		for ( $orderTypeId=1; $orderTypeId <= NUMBER_OF_ORDER_TYPES ; $orderTypeId++ ) { 
+
+			if ( $orderTypeId == $typeId ) {
+
+				if ( $resultCount < $typeId ) {
+					
+					return true;
+
+				}
+					
+				return false;
+
+			}
+			
+			
+		}
+			
+		
 	
 	}
 

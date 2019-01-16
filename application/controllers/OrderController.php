@@ -33,9 +33,24 @@ class OrderController extends CI_Controller
 		if( $this->form_validation->run() === TRUE )
 		{
 
-			$this->Order->create( $this->input->post( 'projectId' ) );
+			$orderType = $this->input->post('order_type');
 
-			$response['isCreated'] = true;
+			if ( $this->Order->validateOrderType ( $this->input->post( 'projectId' ), $orderType ) ) {
+
+				$this->Order->create( $this->input->post( 'projectId' ) );
+
+				$response['isCreated'] = true;
+
+			} else {
+
+				$response['isCreated'] = false;
+
+
+				$response["errors"] = ["Nalog može imati maksimalno $orderType naloga odabranog tipa!"];
+
+			}
+		
+			
 
 		} else {
 
